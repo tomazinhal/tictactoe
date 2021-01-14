@@ -1,21 +1,11 @@
 const ROWS: usize = 3;
 const COLS: usize = 3;
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 enum State {
     Empty,
     X,
     O
-}
-
-impl State {
-    fn Display() -> String {
-        match {
-            Empty: ' '.to_string(),
-            X: 'X'.to_string(),
-            O: 'O'.to_string(),
-        }
-    }
 }
 
 #[derive(Copy, Clone)]
@@ -28,7 +18,7 @@ struct Cell {
 impl Cell {
     fn new(x: u8, y: u8) -> Cell {
         Cell {
-            state: State::X,
+            state: State::Empty,
             x: x,
             y: y
         }
@@ -36,6 +26,7 @@ impl Cell {
 }
 
 fn show_grid(grid: Vec<Cell>) {
+    let line: String = "|{}|{}|{}|".to_string();
     for (i, cell) in grid.iter().enumerate() {
         match i % 3 {
             0 => println!("first column"),
@@ -44,10 +35,9 @@ fn show_grid(grid: Vec<Cell>) {
             _ => panic!("not a valid column value"),
         }
         match cell.state {
-            Empty => println!("Empty"),
-            X => println!("X"),
-            O => println!("O"),
-            //_ => panic!("Not a valid state"),
+            State::Empty => println!("Empty"),
+            State::X => println!("X"),
+            State::O => println!("O"),
         }
     }
 }
@@ -57,7 +47,27 @@ fn is_gameover(grid: Vec<Cell>) -> String {
 }
 
 fn play(x: u8, y: u8, state: State) {
-    println!("{} is being played on ({}, {})", state, x, y);
+    println!("{:?} is being played on ({}, {})", state, x, y);
+    if x > 3 || y > 3{
+        println!("Coordinate not valid");
+    }
+}
+
+fn play_cell(cell: &Cell) {
+    play(cell.x, cell.y, cell.state);
+}
+
+fn find(grid: Vec<Cell>, x: u8, y: u8) {
+    for cell in grid.iter() {
+        match cell.state {
+            State::O => continue,
+            State::X => continue,
+            State::Empty => println!("Cell is Empty"),
+        }
+        if cell.x == x && cell.y == y {
+            play_cell(cell);
+        }
+    }
 }
 
 fn main () {
@@ -68,6 +78,8 @@ fn main () {
             grid.push(Cell::new(x as u8, y as u8));
         }
     }
+    let cell = Cell {x: 1, y: 1, state: State::O};
+    find(grid.clone(), cell.x, cell.y);
     play(2, 2, State::X);
     show_grid(grid.clone());
     is_gameover(grid.clone());
