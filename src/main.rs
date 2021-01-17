@@ -20,6 +20,16 @@ impl fmt::Display for State {
     }
 }
 
+impl PartialEq for State {
+    fn eq(&self, other: &Self) -> bool {
+        match self {
+            other => true,
+            _ => false
+        }
+    }
+}
+
+
 #[derive(Copy, Clone)]
 struct Cell {
     state: State,
@@ -38,8 +48,6 @@ impl Cell {
 }
 
 fn show_grid(grid: &Vec<Cell>) {
-    let line: String = "|{}|{}|{}|".to_string();
-    let mut row = 0;
     for (i, cell) in grid.iter().enumerate() {
         match (i + 1)  % 3 {
             0 => println!("|{}|", cell.state),
@@ -49,6 +57,38 @@ fn show_grid(grid: &Vec<Cell>) {
 }
 
 fn is_gameover(grid: &Vec<Cell>) -> bool {
+    // bruh.jpeg
+    // check rows and columns
+    for i in 0..2 {
+        let row = 3 * i;
+        if ( // rows
+            grid[0 + row].state == grid[1 + row].state
+            ) == (
+            grid[0 + row].state == grid[2 + row].state
+            ) {
+            match grid[0 + row].state {
+                State::Empty => continue,
+                _ => return true,
+            }
+        }
+        if ( // columns
+            grid[0 + i].state == grid[3 + i].state
+            ) == (
+            grid[0 + i].state == grid[6 + i].state
+            ) {
+            match grid[0 + i].state {
+                State::Empty => continue,
+                _ => return true,
+            }
+        }
+    }
+    // check draw
+    for cell in grid {
+       match cell.state {
+           State::Empty => return false,
+           _ => break,
+       }
+    }
     false
 }
 
@@ -77,11 +117,12 @@ fn find(grid: &Vec<Cell>, x: u8, y: u8) -> Result<&Cell, bool> {
 
 fn player_choose(state: State) {
     println!("Player with {} choose a coordinate:", state);
-    let choice = String::from("01");
+    let choice = String::from("11");
     if choice.len() != 2 {
         return;
     }
     let mut chars = choice.chars();
+    // there must be a way to make this better/simpler
     let x: u8 = chars.nth(0).unwrap().to_digit(10).expect("X is not u8") as u8;
     let y: u8 = chars.nth(0).unwrap().to_digit(10).expect("Y is not u8") as u8;
     println!("Player {} chose ({}, {})", state, x, y);

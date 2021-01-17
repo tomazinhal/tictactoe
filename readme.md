@@ -30,3 +30,6 @@ A player can only play on an empty cell.
 
 # NOTES
 Difference between Clone and Copy in Rust -> https://github.com/rust-lang/rust/blob/2e6eaceedeeda764056eb0e2134735793533770d/src/libcore/marker.rs#L272
+
+To use binary comparison between State -> https://doc.rust-lang.org/std/cmp/trait.PartialEq.html
+

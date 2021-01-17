@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      env:
-        RUST_BACKTRACE: 1
       - uses: actions/checkout@v2
       - run: cargo run 
+        env:
+          RUST_BACKTRACE: 1
 
