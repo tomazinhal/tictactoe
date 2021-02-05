@@ -51,6 +51,8 @@ impl PartialEq for Coordinate {
     }
 }
 
+// Cell
+#[derive(Copy, Clone, Debug)]
 struct Cell {
     state: State,
     address: Coordinate,
@@ -76,26 +78,26 @@ fn show_grid(grid: &Vec<Cell>) {
     }
 }
 
-fn is_gameover(grid: &Vec<Cell>) -> bool {
+fn is_gameover(grid: Vec<Cell>) -> bool {
     // bruh.jpeg
     // check rows and columns
     for i in 0..2 {
         let row = 3 * i;
-        if ( // rows
+        if (
+            // rows
             grid[0 + row].state == grid[1 + row].state
-            ) == (
-            grid[0 + row].state == grid[2 + row].state
-            ) {
+        ) && (grid[0 + row].state == grid[2 + row].state)
+        {
             match grid[0 + row].state {
                 State::Empty => continue,
                 _ => return true,
             }
         }
-        if ( // columns
+        if (
+            // columns
             grid[0 + i].state == grid[3 + i].state
-            ) == (
-            grid[0 + i].state == grid[6 + i].state
-            ) {
+        ) && (grid[0 + i].state == grid[6 + i].state)
+        {
             match grid[0 + i].state {
                 State::Empty => continue,
                 _ => return true,
