@@ -7,16 +7,16 @@ const COLS: usize = 3;
 enum State {
     Empty,
     X,
-    O
+    O,
 }
 
 impl fmt::Display for State {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-       match *self {
-           State::Empty => write!(f, " "),
-           State::X => write!(f, "X"),
-           State::O => write!(f, "O"),
-       }
+        match *self {
+            State::Empty => write!(f, " "),
+            State::X => write!(f, "X"),
+            State::O => write!(f, "O"),
+        }
     }
 }
 
@@ -47,9 +47,11 @@ impl Cell {
     }
 }
 
+//Fuctions
+
 fn show_grid(grid: &Vec<Cell>) {
     for (i, cell) in grid.iter().enumerate() {
-        match (i + 1)  % 3 {
+        match (i + 1) % 3 {
             0 => println!("|{}|", cell.state),
             _ => print!("|{}", cell.state),
         }
@@ -84,10 +86,10 @@ fn is_gameover(grid: &Vec<Cell>) -> bool {
     }
     // check draw
     for cell in grid {
-       match cell.state {
-           State::Empty => return false,
-           _ => break,
-       }
+        match cell.state {
+            State::Empty => return false,
+            _ => break,
+        }
     }
     false
 }
@@ -128,7 +130,7 @@ fn player_choose(state: State) {
     println!("Player {} chose ({}, {})", state, x, y);
 }
 
-fn main () {
+fn main() {
     let mut grid: Vec<Cell> = vec![];
 
     for y in 0..ROWS {
