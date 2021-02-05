@@ -127,27 +127,11 @@ fn get_player_choose() -> Coordinate {
     return coordinate;
 }
 
-fn find(grid: &Vec<Cell>, x: u8, y: u8) -> Result<&Cell, bool> {
-    for cell in grid.iter() {
-        if cell.x == x && cell.y == y {
-            println!("Coordinates found");
-        }
-        else {
-            continue;
-        }
-        match cell.state {
-            State::Empty => return Ok(cell),
-            _ => continue,
-        }
-    }
-    return Err(false);
-}
-
-fn player_choose(state: State) {
-    println!("Player with {} choose a coordinate:", state);
-    let choice = String::from("11");
-    if choice.len() != 2 {
-        return;
+fn change_turn(turn_owner: State) -> State {
+    match turn_owner {
+        State::X => return State::O,
+        State::O => return State::X,
+        _ => panic!("Can't change turns".to_string()),
     }
 }
 
@@ -159,15 +143,26 @@ fn main() {
             grid.push(Cell::new(x as u8, y as u8));
         }
     }
-    let cell = Cell {x: 1, y: 1, state: State::O};
-    let result = find(&grid, cell.x, cell.y);
-    match result {
-        Ok(found) => println!("Found cell"),
-        Err(e) => println!("Not found"),
-    }
-    player_choose(State::X);
-    play(&grid, 2, 2, State::X);
+    let mut turn_owner = State::X;
     show_grid(&grid);
-    is_gameover(&grid);
+    while !is_gameover(grid.clone()) {
+        let coordinate = get_player_choose();
+        let grid_position = grid
+            .iter()
+            .position(|&cell| cell.address == coordinate && cell.state == State::Empty);
+        match grid_position {
+            Some(index) => {
+                if grid[index].state == State::Empty && turn_owner != State::Empty {
+                    grid[index].state = turn_owner
+                }
+                turn_owner = change_turn(turn_owner);
+            }
+            None => println!(
+                "{},{} is not a valid coordinate",
+                coordinate.x + 1,
+                coordinate.y + 1
+            ),
+        }
+        show_grid(&grid);
+    }
 }
-
