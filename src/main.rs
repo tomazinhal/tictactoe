@@ -23,9 +23,11 @@ impl fmt::Display for State {
 
 impl PartialEq for State {
     fn eq(&self, other: &Self) -> bool {
-        match self {
-            other => true,
-            _ => false
+        match (self, other) {
+            (State::Empty, State::Empty) => true,
+            (State::X, State::X) => true,
+            (State::O, State::O) => true,
+            (_, _) => false,
         }
     }
 }
