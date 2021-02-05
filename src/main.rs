@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io;
 
 const ROWS: usize = 3;
 const COLS: usize = 3;
@@ -94,11 +95,17 @@ fn is_gameover(grid: &Vec<Cell>) -> bool {
     false
 }
 
-fn play(grid: &Vec<Cell>, x: u8, y: u8, state: State) {
-    println!("{:?} is being played on ({}, {})", state, x, y);
-    if x > 3 || y > 3{
-        println!("Coordinate not valid");
-    }
+fn get_player_choose() -> Coordinate {
+    let mut x = String::new();
+    let mut y = String::new();
+    println!("Please, enter x coordinate");
+    io::stdin().read_line(&mut x).expect("Failed to read line");
+    println!("Please, enter y coordinate");
+    io::stdin().read_line(&mut y).expect("Failed to read line");
+    let x: u8 = x.trim().parse().expect("Please type a number!");
+    let y: u8 = y.trim().parse().expect("Please type a number!");
+    let coordinate = Coordinate::new(x - 1, y - 1);
+    return coordinate;
 }
 
 fn find(grid: &Vec<Cell>, x: u8, y: u8) -> Result<&Cell, bool> {
@@ -123,11 +130,6 @@ fn player_choose(state: State) {
     if choice.len() != 2 {
         return;
     }
-    let mut chars = choice.chars();
-    // there must be a way to make this better/simpler
-    let x: u8 = chars.nth(0).unwrap().to_digit(10).expect("X is not u8") as u8;
-    let y: u8 = chars.nth(0).unwrap().to_digit(10).expect("Y is not u8") as u8;
-    println!("Player {} chose ({}, {})", state, x, y);
 }
 
 fn main() {
