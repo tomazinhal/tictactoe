@@ -32,20 +32,35 @@ impl PartialEq for State {
     }
 }
 
+// Coordinates
+#[derive(Copy, Clone, Debug)]
+struct Coordinate {
+    x: u8,
+    y: u8,
+}
 
-#[derive(Copy, Clone)]
+impl Coordinate {
+    fn new(x: u8, y: u8) -> Coordinate {
+        Coordinate { x: x, y: y }
+    }
+}
+
+impl PartialEq for Coordinate {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+}
+
 struct Cell {
     state: State,
-    x: u8,
-    y: u8
+    address: Coordinate,
 }
 
 impl Cell {
     fn new(x: u8, y: u8) -> Cell {
         Cell {
             state: State::Empty,
-            x: x,
-            y: y
+            address: Coordinate::new(x, y),
         }
     }
 }
