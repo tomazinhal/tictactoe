@@ -32,7 +32,7 @@ impl PartialEq for State {
     }
 }
 
-// Coordinates
+// Coordinates struct
 #[derive(Copy, Clone, Debug)]
 struct Coordinate {
     x: u8,
@@ -51,7 +51,7 @@ impl PartialEq for Coordinate {
     }
 }
 
-// Cell
+// Cell struct
 #[derive(Copy, Clone, Debug)]
 struct Cell {
     state: State,
@@ -67,7 +67,7 @@ impl Cell {
     }
 }
 
-//Fuctions
+// Fuctions
 
 fn show_grid(grid: &Vec<Cell>) {
     for (i, cell) in grid.iter().enumerate() {
@@ -79,7 +79,6 @@ fn show_grid(grid: &Vec<Cell>) {
 }
 
 fn is_gameover(grid: Vec<Cell>) -> bool {
-    // bruh.jpeg
     // check rows and columns
     for i in 0..2 {
         let row = 3 * i;
