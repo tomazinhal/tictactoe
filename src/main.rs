@@ -148,15 +148,15 @@ fn get_player_choose() -> Coordinate {
     return coordinate;
 }
 
-fn change_turn(turn_owner: State) -> State {
+fn change_turn(turn_owner: State) -> Result<State, Error> {
     match turn_owner {
-        State::X => return State::O,
-        State::O => return State::X,
-        _ => panic!("Can't change turns".to_string()),
+        State::X => Ok(State::O),
+        State::O => Ok(State::X),
+        _ => Err(Error::new("Can't change turns".to_string())),
     }
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     let mut grid: Vec<Cell> = vec![];
 
     for y in 0..ROWS {
@@ -176,7 +176,7 @@ fn main() {
                 if grid[index].state == State::Empty && turn_owner != State::Empty {
                     grid[index].state = turn_owner
                 }
-                turn_owner = change_turn(turn_owner);
+                turn_owner = change_turn(turn_owner)?;
             }
             None => println!(
                 "{},{} is not a valid coordinate",
@@ -186,4 +186,5 @@ fn main() {
         }
         show_grid(&grid);
     }
+    Ok(())
 }
