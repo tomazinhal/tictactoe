@@ -1,16 +1,15 @@
 use std::fmt;
-use std::fmt::Display;
 use std::io;
 
 const ROWS: usize = 3;
 const COLS: usize = 3;
 
+// Custom error struct
 #[derive(Debug)]
 struct Error {
     description: String,
 }
 
-// Custom error struct
 impl Error {
     fn new(err_description: String) -> Error {
         Error {
@@ -19,9 +18,6 @@ impl Error {
     }
 }
 
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.description)
     }
 }
 
@@ -179,7 +175,7 @@ fn main() -> Result<(), Error> {
                 turn_owner = change_turn(turn_owner)?;
             }
             None => println!(
-                "{},{} is not a valid coordinate",
+                "{},{} is not a valid coordinate for this grid.",
                 coordinate.x + 1,
                 coordinate.y + 1
             ),
