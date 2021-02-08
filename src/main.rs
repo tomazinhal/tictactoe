@@ -1,5 +1,7 @@
 use std::fmt;
 use std::io;
+use std::io::Error as ioError;
+use std::num::ParseIntError;
 
 const ROWS: usize = 3;
 const COLS: usize = 3;
@@ -18,6 +20,15 @@ impl Error {
     }
 }
 
+impl From<ParseIntError> for Error {
+    fn from(e: ParseIntError) -> Self {
+        Error::new(format!("ParseIntError: {}", e))
+    }
+}
+
+impl From<ioError> for Error {
+    fn from(e: ioError) -> Self {
+        Error::new(format!("Input error: {}", e))
     }
 }
 
