@@ -142,17 +142,25 @@ fn is_gameover(grid: Vec<Cell>) -> bool {
     false
 }
 
-fn get_player_choose() -> Coordinate {
-    let mut x = String::new();
-    let mut y = String::new();
-    println!("Please, enter x coordinate");
-    io::stdin().read_line(&mut x).expect("Failed to read line");
-    println!("Please, enter y coordinate");
-    io::stdin().read_line(&mut y).expect("Failed to read line");
-    let x: u8 = x.trim().parse().expect("Please type a number!");
-    let y: u8 = y.trim().parse().expect("Please type a number!");
+fn get_player_input(axis: String) -> Result<u8, Error> {
+    println!("Please, enter {} coordinate", axis);
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+    let value: u8 = match input.trim().parse() {
+        Ok(0) | Err(_) => {
+            println!("The input for coordinates are invalid, please, ingress a valid value");
+            return get_player_input(axis);
+        }
+        Ok(number) => number,
+    };
+    Ok(value)
+}
+
+fn get_player_choice() -> Result<Coordinate, Error> {
+    let x = get_player_input("x".into())?;
+    let y = get_player_input("y".into())?;
     let coordinate = Coordinate::new(x - 1, y - 1);
-    return coordinate;
+    Ok(coordinate)
 }
 
 fn change_turn(turn_owner: State) -> Result<State, Error> {
@@ -174,7 +182,7 @@ fn main() -> Result<(), Error> {
     let mut turn_owner = State::X;
     show_grid(&grid);
     while !is_gameover(grid.clone()) {
-        let coordinate = get_player_choose();
+        let coordinate = get_player_choice()?;
         let grid_position = grid
             .iter()
             .position(|&cell| cell.address == coordinate && cell.state == State::Empty);
