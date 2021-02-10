@@ -118,28 +118,63 @@ fn exist_winning_move(initial_cell: Cell, middle: &Cell, extreme: &Cell) -> bool
 }
 
 fn is_gameover(grid: Vec<Cell>) -> bool {
-    // check rows and columns
-    for i in 0..2 {
-        let row = 3 * i;
-        if (
-            // rows
-            grid[0 + row].state == grid[1 + row].state
-        ) && (grid[0 + row].state == grid[2 + row].state)
-        {
-            match grid[0 + row].state {
-                State::Empty => continue,
-                _ => return true,
+    let grid_iterator = grid.iter();
+
+    for cell in grid.clone() {
+        let mut relative_cells_to_eval: Vec<(&Cell, &Cell)> = vec![];
+        let middle_row = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x + 1 && other_cell.address.y == cell.address.y
+        });
+        let extreme_row = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x + 2 && other_cell.address.y == cell.address.y
+        });
+        match (middle_row, extreme_row) {
+            (Some(middle), Some(extreme)) => relative_cells_to_eval.push((middle, extreme)),
+            (_, _) => {}
+        }
+
+        let middle_diagonal_lr = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x + 1 && other_cell.address.y == cell.address.y + 1
+        });
+        let extreme_diagonal_lr = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x + 2 && other_cell.address.y == cell.address.y + 2
+        });
+        match (middle_diagonal_lr, extreme_diagonal_lr) {
+            (Some(middle), Some(extreme)) => relative_cells_to_eval.push((middle, extreme)),
+            (_, _) => {}
+        }
+
+        if cell.address.x >= 2 {
+            //Because tictactoe needs at least 3 cells lined, to check diagonal from right to left we need to ensure that at least we are in col 3.
+            let middle_diagonal_rl = grid_iterator.clone().find(|&other_cell| {
+                other_cell.address.x == cell.address.x - 1
+                    && other_cell.address.y == cell.address.y + 1
+            });
+            let extreme_diagonal_rl = grid_iterator.clone().find(|&other_cell| {
+                other_cell.address.x == cell.address.x - 2
+                    && other_cell.address.y == cell.address.y + 2
+            });
+            match (middle_diagonal_rl, extreme_diagonal_rl) {
+                (Some(middle), Some(extreme)) => relative_cells_to_eval.push((middle, extreme)),
+                (_, _) => {}
             }
         }
-        if (
-            // columns
-            grid[0 + i].state == grid[3 + i].state
-        ) && (grid[0 + i].state == grid[6 + i].state)
-        {
-            match grid[0 + i].state {
-                State::Empty => continue,
-                _ => return true,
-            }
+
+        let middle_vertical = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x && other_cell.address.y == cell.address.y + 1
+        });
+        let extreme_vertical = grid_iterator.clone().find(|&other_cell| {
+            other_cell.address.x == cell.address.x && other_cell.address.y == cell.address.y + 2
+        });
+        match (middle_vertical, extreme_vertical) {
+            (Some(middle), Some(extreme)) => relative_cells_to_eval.push((middle, extreme)),
+            (_, _) => {}
+        }
+
+        for (middle, extreme) in relative_cells_to_eval {
+            if exist_winning_move(cell, middle, extreme) {
+                return true;
+            };
         }
     }
     // Check draw
