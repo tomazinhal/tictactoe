@@ -181,10 +181,10 @@ fn is_gameover(grid: Vec<Cell>) -> bool {
     for cell in grid {
         match cell.state {
             State::Empty => return false,
-            _ => break,
+            _ => {}
         }
     }
-    false
+    true
 }
 
 fn get_player_input(axis: String) -> Result<u8, Error> {
