@@ -107,6 +107,16 @@ fn show_grid(grid: &Vec<Cell>) {
     }
 }
 
+fn exist_winning_move(initial_cell: Cell, middle: &Cell, extreme: &Cell) -> bool {
+    use State::*;
+    match (initial_cell.state, middle.state, extreme.state) {
+        (X, X, X) | (O, O, O) => {
+            return true;
+        }
+        (_, _, _) => return false,
+    };
+}
+
 fn is_gameover(grid: Vec<Cell>) -> bool {
     // check rows and columns
     for i in 0..2 {
