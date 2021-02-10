@@ -100,7 +100,7 @@ impl Cell {
 
 fn show_grid(grid: &Vec<Cell>) {
     for (i, cell) in grid.iter().enumerate() {
-        match (i + 1) % 3 {
+        match (i + 1) % COLS {
             0 => println!("|{}|", cell.state),
             _ => print!("|{}", cell.state),
         }
@@ -132,7 +132,7 @@ fn is_gameover(grid: Vec<Cell>) -> bool {
             }
         }
     }
-    // check draw
+    // Check draw
     for cell in grid {
         match cell.state {
             State::Empty => return false,
