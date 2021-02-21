@@ -173,6 +173,7 @@ fn is_gameover(grid: Vec<Cell>) -> bool {
 
         for (middle, extreme) in relative_cells_to_eval {
             if exist_winning_move(cell, middle, extreme) {
+                println!("Congratulations player with {}!", cell.state);
                 return true;
             };
         }
