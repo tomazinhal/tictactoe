@@ -7,7 +7,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: cargo run 
+      - run: cargo check 
         env:
           RUST_BACKTRACE: 1
 
